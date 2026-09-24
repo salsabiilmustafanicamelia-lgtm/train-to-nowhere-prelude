@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <title>Train to Nowhere - Prelude</title>
+    </head>
+    <body>
+
+    <!-- Start Menu -->
+    <section id="startMenu" class="screen">
+        <audio id="backgroundMusic" autoplay loop>
+            <source src="sound/static radio.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="closingTapeAudio">
+            <source src="sound/closing tape.mp3" type="audio/mpeg">
+        </audio>
+        <p>You are an employee of the DSE, sub-unit EIU-RN. <br><br> You are tasked to identify and file any sightings of entities that live along Route Nowhere.</p>
+        <p id="warning">Warning: This mission may contain disturbing imagery and nonsensical content. <br><br>The train is sentient. It will try to speak to you.<br>Do not listen to it.</p>
+        <button id="startButton" onclick="beginMissionSequence()">Proceed</button>
+    </section>
+
+    <!-- Mission Details (After Start Menu) -->
+    <section id="missionDetails" class="screen">
+        <p>This is the Prelude for your mission in Route Nowhere. You are not expected to return from this journey.</p>
+    </section>
+
+    <!-- Maze Section (After Mission Details) -->
+    <section id="maze" class="screen">
+        <h2 id="mazeTitle">MAZE — ENTRY</h2>
+        <canvas id="mazeCanvas"></canvas>
+        <p id="mazeStatus">Trace a path through the maze. Touching a wall sends you back to the start.</p>
+    </section>
+
+    <!-- Train Arrival Sound (After Maze) -->
+    <audio id="trainArrive">
+        <source src="sound/train arrival and door opening.mp3" type="audio/mpeg">
+    </audio>
+
+    <section id="endingScreen" class="screen">
+        <audio id="endingMusic" loop>
+            <source src="sound/Take Care - Heaven Pierce Her (Loop).mp3" type="audio/mpeg">
+        </audio>
+        <p id="endingMessage">You have completed the prelude, there's still more to come. Be prepared when we need you.</p>
+        <p id="endingWhisper">we need you</p>
+    </section>
+
+    <!-- Real Main Menu (Consists of Start, Instructions, and Credits Buttons) -->
+    <section id="mainMenu" class="screen">
+
+        <audio id="trainAudio" loop>
+            <source src="sound/inside traintn2.mp3" type="audio/mpeg">
+        </audio>
+
+        <audio id="trainLobbyMusic" loop>
+            <source src="sound/The Fire Is Gone (For Piano, Saxophone and Trumpet).mp3" type="audio/mpeg">
+        </audio>
+
+        <h1>Train to Nowhere - Prelude<hr></h1>
+        <div id="mainMenuScene" aria-hidden="true">
+            <div id="mainMenuBackgroundTrack">
+                <img src="assets/prelude train background.png" alt="" class="mainMenuBackground">
+                <img src="assets/prelude train background.png" alt="" class="mainMenuBackground">
+                <img src="assets/prelude train background.png" alt="" class="mainMenuBackground">
+            </div>
+            <img src="assets/train interior.png" alt="" id="mainMenuInterior">
+        </div>
+        <div id="mainMenuButtons">
+            <button id="startMissionPreludeBtn" onclick="startMissionPrelude()">Start Mission</button>
+            <button id="instructionsBtn" onclick="showInstructions()">Instructions</button>
+            <button id="creditsBtn" onclick="showCredits()">Credits</button>
+        </div>
+    </section>
+
+    <!-- Menu Overlay (For Instructions and Credits) -->
+    <div id="menuOverlay" aria-hidden="true">
+        <div id="menuOverlayWindow" role="dialog" aria-modal="true" aria-labelledby="menuOverlayTitle">
+            <button id="closeMenuOverlay" type="button" onclick="closeMenuOverlay()" aria-label="Close window">X</button>
+            <h2 id="menuOverlayTitle"></h2>
+            <div id="menuOverlayContent"></div>
+        </div>
+    </div>
+
+    <div id="trainDialogueOverlay" aria-hidden="true">
+        <div id="trainDialogueWindow" role="dialog" aria-modal="true" aria-labelledby="trainDialogueTitle">
+            <button id="closeTrainDialogue" type="button" onclick="closeTrainDialogue()" aria-label="Close train dialogue">X</button>
+            <h2 id="trainDialogueTitle">The train speaks</h2>
+            <p id="trainDialogueText"></p>
+        </div>
+    </div>
+
+    <section id="mainArea" class="screen">
+        <audio id="MainMusic" loop>
+            <source src="sound/Heaven Pierce Her - Suffering Leaves Suffering Leaves.mp3" type="audio/mpeg">
+        </audio>
+        <div id="mainAreaScene">
+            <img src="assets/mainArea.png" alt="Main Area" id="mainAreaImage">
+
+            <div id="red_roses" aria-label="Red roses">
+                <img src="assets/red_rose_left.png" alt="Red rose" id="red_rose1" class="redRose">
+                <img src="assets/red_rose_left.png" alt="Red rose" id="red_rose2" class="redRose">
+                <img src="assets/red_rose_left.png" alt="Red rose" id="red_rose3" class="redRose">
+                <img src="assets/red_rose_right.png" alt="Red rose" id="red_rose4" class="redRose">
+                <img src="assets/red_rose_right.png" alt="Red rose" id="red_rose5" class="redRose">
+                <img src="assets/red_rose_right.png" alt="Red rose" id="red_rose6" class="redRose">
+            </div>
+        </div>
+
+        <p id="roseCounter" aria-live="polite">Roses discovered: 0 / 15</p>
+        <button id="cipherHintButton" type="button" onclick="showCipherHint()">Hint</button>
+        <button id="leftAreaButton" type="button" onclick="openLeftArea()" aria-label="Open left area">&#9664;</button>
+        <button id="frontAreaButton" type="button" onclick="openFrontArea()" aria-label="Open front area">&#9654;</button>
+        <button id="trainBackButton" type="button" onclick="openTrainArea()" aria-label="Enter the train">Train</button>
+    </section>
+
+    <div id="vivaRosaCutscene" aria-hidden="true">
+        <p>As you poke on the flowers on the ground, one of them wiggles in their place. Curious, you picked it up.</p>
+    </div>
+
+    <div id="vivaRosaOverlay" aria-hidden="true">
+        <div id="vivaRosaWindow" role="dialog" aria-modal="true" aria-label="Viva Rosa discovered">
+            <button id="closeVivaRosa" type="button" onclick="closeVivaRosaOverlay()" aria-label="Close discovery">X</button>
+            <img src="assets/viva_rosa_discovered.png" alt="Viva Rosa discovered" id="vivaRosaImage">
+            <div id="vivaRosaText">
+                <h2>Viva Rosa</h2>
+                <p>According to the list of entities, this one is called Viva Rosa, or Living Rose. They burry themselves underground with their flower head sticking out to get sunlight, their source of food. There isn't any known accidents cause by this entity.</p>
+            </div>
+        </div>
+    </div>
+
+    <section id="leftArea" class="screen active">
+        <div id="leftAreaScene">
+            <img src="assets/locationArea.png" alt="Left Area" id="locationAreaImage">
+            <button id="mushroomClickable" type="button" onclick="showMushroomDialogue()" aria-label="Inspect mushroom">
+                <img src="assets/muschroomClickable.png" alt="Mushroom">
+            </button>
+        </div>
+        <button id="returnMainAreaButton" type="button" onclick="returnToMainArea()">&#9654;</button>
+    </section>
+
+    <div id="mushroomDialogueOverlay" aria-hidden="true">
+        <div id="mushroomDialogueWindow" role="dialog" aria-modal="true" aria-label="Mushroom dialogue">
+            <button id="closeMushroomDialogue" type="button" onclick="closeMushroomDialogue()" aria-label="Close mushroom dialogue">X</button>
+            <div id="mushroomDialogueText">
+                <p>"\x6B\x71\x5F\x62\x68\x7A\x6E"</p>
+            </div>
+        </div>
+    </div>
+
+    <section id="frontArea" class="screen">
+        <div id="frontAreaScene">
+            <img src="assets/frontArea.png" alt="Front Area" id="frontAreaImage">
+        </div>
+        <button id="returnMainAreaButtonFront" type="button" onclick="returnToMainAreaFront()">&#9654;</button>
+    </section>
+
+    <section id="trainArea" class="screen">
+        <div id="trainAreaScene">
+            <img src="assets/prelude train background.png" alt="" id="trainAreaStaticBackground">
+            <img src="assets/train interior.png" alt="Train interior" id="trainAreaInterior">
+
+            <div id="findingFormCard" class="findingCard" aria-hidden="true">
+                <button id="closeFindingFormButton" type="button" onclick="closeFindingForm()" aria-label="Close field report">X</button>
+                <h2>Field Report</h2>
+
+                <label for="entityNameInput">Name of entity</label>
+                <input id="entityNameInput" type="text" placeholder="Name of entity">
+                <p id="entityNameHint" class="findingHint" aria-live="polite"></p>
+
+                <label for="entityClassificationInput">Classification</label>
+                <select id="entityClassificationInput">
+                    <option value="" selected>Choose classification</option>
+                    <option value="dangerous">Dangerous</option>
+                    <option value="cautious">Cautious</option>
+                    <option value="not dangerous">Not Dangerous</option>
+                </select>
+                <p id="entityClassificationHint" class="findingHint" aria-live="polite"></p>
+
+                <label for="locationNameInput">Name of location</label>
+                <input id="locationNameInput" type="text" placeholder="Name of location">
+                <p id="locationNameHint" class="findingHint" aria-live="polite"></p>
+
+                <label for="nextLocationNameInput">Name of the next location</label>
+                <input id="nextLocationNameInput" type="text" placeholder="Name of the next location">
+                <p id="nextLocationNameHint" class="findingHint" aria-live="polite"></p>
+
+                <div class="formActions">
+                    <button id="submitFindingButton" type="button" onclick="submitFindings()">Submit Findings</button>
+                </div>
+                <p id="findingVerification" role="status" aria-live="polite"></p>
+            </div>
+        </div>
+        <button id="openFindingFormButton" type="button" onclick="openFindingForm()">Open Report</button>
+        <button id="returnMainAreaFromTrainButton" type="button" onclick="returnToMainAreaFromTrain()">&#9664;</button>
+    </section>
+
+    <script src="script.js"></script>
+    </body>
+</html>

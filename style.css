@@ -1,0 +1,887 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+button {
+    appearance: none;
+    border-radius: 4px;
+    color: #f2ede4;
+    background: #050505;
+    border: 1px solid rgba(242, 237, 228, 0.62);
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1.2;
+    transition: background-color 180ms ease, border-color 180ms ease,
+        box-shadow 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+button:hover,
+button:focus-visible {
+    border-color: rgba(242, 237, 228, 0.95);
+    background: #171717;
+    box-shadow: 0 0 0 3px rgba(242, 237, 228, 0.08),
+        0 5px 16px rgba(0, 0, 0, 0.35);
+}
+
+button:active {
+    box-shadow: 0 0 0 2px rgba(242, 237, 228, 0.08);
+}
+
+button:focus-visible {
+    outline: 2px solid rgba(242, 237, 228, 0.8);
+    outline-offset: 3px;
+}
+
+body {
+    background-color: #000000;
+    color: #ffffff;
+    text-align: center;
+    padding-top: 75px;
+}
+
+.screen {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.screen.active {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+.screen.fadeIn {
+    animation: missionFadeIn 1.1s ease-in forwards;
+}
+
+.screen.fadeOut {
+    animation: missionFadeOut 1.2s ease-out forwards;
+}
+
+.screen.mazeExit {
+    animation: missionFadeOut 2.2s ease-out forwards;
+}
+
+@keyframes missionFadeIn {
+    from { opacity: 0; filter: brightness(0.6); }
+    to { opacity: 1; filter: brightness(1); }
+}
+
+@keyframes missionFadeOut {
+    from { opacity: 1; filter: brightness(1); }
+    to { opacity: 0; filter: brightness(0.7); }
+}
+
+#warning {
+    color: #672121;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+#missionDetails {
+    padding-top: 100px;
+}
+
+#mainMenu {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: calc(100vh - 75px);
+    height: calc(100vh - 75px);
+    overflow: hidden;
+    padding: 0;
+}
+
+#mainMenu h1 {
+    position: relative;
+    z-index: 3;
+    flex: 0 0 auto;
+    margin: 0;
+    padding-top: 8px;
+}
+
+#mainMenu h1 hr {
+    margin-bottom: 24px;
+}
+
+#mainMenuScene {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: min(60vw, 680px);
+    aspect-ratio: 3 / 2;
+    margin-top: 0;
+    transform: none;
+    z-index: 1;
+    overflow: hidden;
+    background: #111;
+}
+
+#mainMenuBackgroundTrack {
+    display: flex;
+    position: absolute;
+    inset: 0 auto auto 0;
+    top: 8%;
+    width: 240%;
+    height: 60%;
+    animation: mainMenuBackgroundLoop 5s linear infinite;
+}
+
+.mainMenuBackground {
+    display: block;
+    flex: 0 0 33.3333%;
+    width: 33.3333%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#mainMenuInterior {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    pointer-events: none;
+}
+
+#mainMenuButtons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    z-index: 3;
+    margin-top: 18px;
+}
+
+#mainMenuButtons button {
+    min-width: 132px;
+    padding: 11px 16px;
+    background: #050505;
+    cursor: pointer;
+}
+
+#mainMenuButtons button:hover,
+#mainMenuButtons button:focus-visible {
+    color: #f2ede4;
+    background: #171717;
+}
+
+#menuOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.72);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 220ms ease, visibility 220ms ease;
+}
+
+#menuOverlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#menuOverlayWindow {
+    position: relative;
+    width: min(88vw, 460px);
+    max-height: 78vh;
+    overflow-y: auto;
+    padding: 28px 30px;
+    color: #f2ede4;
+    background: rgba(12, 12, 12, 0.96);
+    border: 1px solid rgba(242, 237, 228, 0.65);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+    transform: translateY(10px) scale(0.97);
+    transition: transform 220ms ease;
+}
+
+#menuOverlay.open #menuOverlayWindow {
+    transform: translateY(0) scale(1);
+}
+
+#trainDialogueOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.78);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 240ms ease, visibility 240ms ease;
+}
+
+#trainDialogueOverlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#trainDialogueWindow {
+    position: relative;
+    width: min(90vw, 620px);
+    padding: 34px 30px 28px;
+    color: #f2ede4;
+    background: #080808;
+    border: 1px solid rgba(242, 237, 228, 0.65);
+    box-shadow: 0 14px 44px rgba(0, 0, 0, 0.8);
+    transform: translateY(10px) scale(0.97);
+    transition: transform 240ms ease;
+}
+
+#trainDialogueOverlay.open #trainDialogueWindow {
+    transform: translateY(0) scale(1);
+}
+
+#trainDialogueTitle {
+    margin: 0 0 18px;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+#trainDialogueText {
+    margin: 0;
+    color: rgba(242, 237, 228, 0.86);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+#closeTrainDialogue {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: #050505;
+    cursor: pointer;
+}
+
+#menuOverlayTitle {
+    margin: 0 34px 20px 0;
+}
+
+#menuOverlayContent {
+    text-align: center;
+    line-height: 1.6;
+}
+
+#menuOverlayContent ul {
+    padding-left: 20px;
+    display: inline-block;
+    text-align: left;
+}
+
+#closeMenuOverlay {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    background: #050505;
+    cursor: pointer;
+}
+
+#mainArea {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: #000;
+}
+
+#mainAreaScene {
+    position: relative;
+    width: min(68vw, 760px);
+    line-height: 0;
+    margin: 0 auto;
+}
+
+#mainAreaImage {
+    display: block;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    margin: 0 auto;
+    filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.15));
+}
+
+#red_roses {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+#red_roses img {
+    position: absolute;
+    pointer-events: auto;
+    width: clamp(26px, 3vw, 52px);
+    height: auto;
+    opacity: 0.98;
+    filter: drop-shadow(0 0 5px rgba(255, 60, 60, 0.35));
+}
+
+#red_rose1 { left: 17%; bottom: 12%; transform: rotate(-8deg); }
+#red_rose2 { left: 31%; bottom: 16%; transform: rotate(5deg); }
+#red_rose3 { left: 45%; bottom: 11%; transform: rotate(-3deg); }
+#red_rose4 { right: 31%; bottom: 13%; transform: rotate(8deg); }
+#red_rose5 { right: 17%; bottom: 17%; transform: rotate(-6deg); }
+#red_rose6 { right: 44%; bottom: 8%; transform: rotate(10deg); }
+
+#roseCounter {
+    position: relative;
+    z-index: 3;
+    margin: 14px 0 0;
+    color: #f2ede4;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+#cipherHintButton {
+    position: relative;
+    z-index: 3;
+    margin-top: 10px;
+    padding: 9px 16px;
+    color: #f2ede4;
+    background: #050505;
+    cursor: pointer;
+}
+
+#cipherHintButton:hover,
+#cipherHintButton:focus-visible {
+    background: #171717;
+}
+
+#leftAreaButton,
+#returnMainAreaButton,
+#frontAreaButton,
+#returnMainAreaButtonFront {
+    position: absolute;
+    z-index: 4;
+    width: 42px;
+    height: 42px;
+    background: #050505;
+    cursor: pointer;
+}
+
+#leftAreaButton {
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#frontAreaButton,
+#returnMainAreaButtonFront {
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#trainBackButton,
+#returnMainAreaFromTrainButton {
+    position: absolute;
+    z-index: 4;
+    width: auto;
+    height: auto;
+    padding: 10px 18px;
+    background: #050505;
+    cursor: pointer;
+}
+
+#trainBackButton {
+    left: 18px;
+    bottom: 30px;
+}
+
+#returnMainAreaFromTrainButton {
+    left: 18px;
+    bottom: 30px;
+}
+
+#leftAreaButton:hover,
+#leftAreaButton:focus-visible,
+#returnMainAreaButton:hover,
+#returnMainAreaButton:focus-visible,
+#frontAreaButton:hover,
+#frontAreaButton:focus-visible,
+#returnMainAreaButtonFront:hover,
+#returnMainAreaButtonFront:focus-visible,
+#returnMainAreaFromTrainButton:hover,
+#returnMainAreaFromTrainButton:focus-visible,
+#trainBackButton:hover,
+#trainBackButton:focus-visible,
+#openFindingFormButton:hover,
+#openFindingFormButton:focus-visible {
+    background: #171717;
+}
+
+#leftArea {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: #000;
+}
+
+#leftAreaScene {
+    position: relative;
+    width: min(68vw, 760px);
+    line-height: 0;
+}
+
+#locationAreaImage {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#mushroomClickable {
+    position: absolute;
+    left: 34.98%;
+    top: 70.66%;
+    /* bottom: 12%; */
+    width: 33.1%;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+#mushroomClickable img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#returnMainAreaButton {
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#mushroomDialogueOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.78);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 220ms ease, visibility 220ms ease;
+}
+
+#mushroomDialogueOverlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#mushroomDialogueWindow {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: min(90vw, 560px);
+    width: min(90vw, 560px);
+    padding: 22px 20px 18px;
+    background: rgba(14, 11, 10, 0.96);
+    border: 1px solid rgba(242, 237, 228, 0.6);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
+}
+
+#mushroomDialogueText {
+    width: 100%;
+    padding: 18px 18px 12px;
+    color: #f2ede4;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(242, 237, 228, 0.3);
+}
+
+#mushroomDialogueText p {
+    margin: 0;
+    line-height: 1.6;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+#closeMushroomDialogue {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    width: 30px;
+    height: 30px;
+    color: #f2ede4;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(242, 237, 228, 0.5);
+    cursor: pointer;
+}
+
+#vivaRosaCutscene {
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    color: #f2ede4;
+    background: #000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 500ms ease, visibility 500ms ease;
+}
+
+#vivaRosaCutscene.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+#vivaRosaCutscene p {
+    max-width: 680px;
+    margin: 0;
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    line-height: 1.7;
+}
+
+#vivaRosaOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.82);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 300ms ease, visibility 300ms ease;
+}
+
+#vivaRosaOverlay.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#vivaRosaWindow {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: min(90vw, 700px);
+    max-height: 88vh;
+    padding: 18px 18px 24px;
+    background: #080808;
+    transform: scale(0.96);
+    transition: transform 300ms ease;
+}
+
+#vivaRosaOverlay.open #vivaRosaWindow {
+    transform: scale(1);
+}
+
+#vivaRosaImage {
+    display: block;
+    max-width: 100%;
+    max-height: calc(62vh - 36px);
+    height: auto;
+}
+
+#vivaRosaText {
+    max-width: 620px;
+    margin-top: 18px;
+    color: #f2ede4;
+    text-align: center;
+}
+
+#vivaRosaText h2 {
+    margin: 0 0 10px;
+}
+
+#vivaRosaText p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+#closeVivaRosa {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    width: 30px;
+    height: 30px;
+    color: #f2ede4;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(242, 237, 228, 0.5);
+    cursor: pointer;
+}
+
+#frontArea,
+#trainArea,
+#endingScreen {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: #000;
+}
+
+#frontAreaScene,
+#trainAreaScene {
+    position: relative;
+    width: min(68vw, 760px);
+    line-height: 0;
+    margin: 0 auto;
+}
+
+#endingScreen {
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    color: #f2ede4;
+    text-align: center;
+}
+
+#endingMessage {
+    max-width: 680px;
+    margin: 0;
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    line-height: 1.7;
+}
+
+#endingWhisper {
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    color: rgba(242, 237, 228, 0.22);
+    opacity: 1;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+}
+
+#trainAreaScene::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(10, 10, 10, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 220ms ease, visibility 220ms ease;
+}
+
+#trainAreaScene.form-open::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+#frontAreaImage,
+#trainAreaInterior,
+#trainAreaStaticBackground {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#trainAreaStaticBackground {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    object-fit: cover;
+    filter: brightness(0.82) contrast(1.1);
+}
+
+#trainAreaInterior {
+    position: relative;
+    z-index: 1;
+    display: block;
+}
+
+#findingFormCard {
+    position: absolute;
+    z-index: 2;
+    right: 7%;
+    top: 20%;
+    width: min(36vw, 300px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 18px 16px;
+    background: rgba(18, 14, 13, 0.8);
+    border: 1px solid rgba(242, 237, 228, 0.55);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity 220ms ease, visibility 220ms ease, transform 220ms ease;
+}
+
+#findingFormCard.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+#findingFormCard h2 {
+    margin: 0 0 12px;
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+#findingFormCard label {
+    display: block;
+    margin: 0;
+    font-size: 0.8rem;
+    text-align: left;
+    color: #f2ede4;
+}
+
+#findingFormCard input,
+#findingFormCard select {
+    width: 100%;
+    margin-top: 4px;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    color: #1b140f;
+    background: #f2e9df;
+    border: 1px solid rgba(242, 237, 228, 0.45);
+    outline: none;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+#findingFormCard select {
+    color: #1b140f;
+    background-color: #f6efe8;
+}
+
+#findingFormCard select option {
+    color: #1b140f;
+    background: #ffffff;
+}
+
+#findingFormCard input:focus,
+#findingFormCard select:focus {
+    border-color: rgba(99, 74, 58, 0.9);
+    box-shadow: 0 0 0 2px rgba(170, 129, 90, 0.18);
+}
+
+.formActions {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+#findingVerification {
+    min-height: 1.2em;
+    margin: 2px 0 0;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+#findingVerification.invalid {
+    color: #e7a7a7;
+}
+
+#findingVerification.verified {
+    color: #b8d8b8;
+}
+
+.findingHint {
+    display: none;
+    margin: -4px 0 2px;
+    color: rgba(242, 237, 228, 0.62);
+    font-size: 0.68rem;
+    font-style: italic;
+    line-height: 1.35;
+    text-align: left;
+}
+
+.findingHint.visible {
+    display: block;
+}
+
+#submitFindingButton {
+    padding: 10px 18px;
+    background: #050505;
+    cursor: pointer;
+}
+
+#submitFindingButton:hover,
+#submitFindingButton:focus-visible {
+    background: #171717;
+}
+
+#openFindingFormButton {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    z-index: 4;
+    width: auto;
+    height: auto;
+    padding: 10px 18px;
+    background: #050505;
+    cursor: pointer;
+}
+
+#closeFindingFormButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    background: #050505;
+    cursor: pointer;
+}
+
+@keyframes mainMenuBackgroundLoop {
+    from { transform: translateX(0); }
+    to { transform: translateX(-33.3333%); }
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
